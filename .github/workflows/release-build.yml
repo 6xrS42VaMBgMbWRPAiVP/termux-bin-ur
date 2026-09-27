@@ -50,8 +50,36 @@ jobs:
         include:
           - runner:
               ubuntu-24.04-arm
+            platform:
+              android
+            platform_target:
+              termux
             architecture:
               aarch64
+          - runner:
+              ubuntu-24.04
+            platform:
+              android
+            platform_target:
+              termux
+            architecture:
+              i686
+          - runner:
+              ubuntu-24.04-arm
+            platform:
+              android
+            platform_target:
+              termux
+            architecture:
+              arm
+          - runner:
+              ubuntu-24.04
+            platform:
+              android
+            platform_target:
+              termux
+            architecture:
+              x86_64
     runs-on:
       ${{ matrix.runner }}
     # prepare writable volume prefix mount for actions/upload-artifact,
@@ -1160,9 +1188,9 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "termux-bin-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "termux-bin-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_name:
-            "dogeos-android-termux-bin-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "dogeos-android-termux-bin-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_content_type:
             application/gzip
       - name:
@@ -1986,9 +2014,9 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "termux-bin-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "termux-bin-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_name:
-            "dogeos-gnu-termux-bin-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "dogeos-gnu-termux-bin-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_content_type:
             application/gzip
       - name:
@@ -2545,7 +2573,7 @@ jobs:
           asset_path:
             "termux-bin-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
           asset_name:
-            "dogeos-windows-termux-bin-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "dogeos-windows-termux-bin-${{ steps.version.outputs.version }}-${{ matrix.arch }}.pkg.tar.xz"
           asset_content_type:
             application/gzip
       - name:
