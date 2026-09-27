@@ -97,6 +97,10 @@ if [[ ! -v "_archive_format" ]]; then
     fi
   fi
 fi
+if [[ ! -v "_docs" ]]; then
+  _docs="true"
+fi
+_py="python"
 _pkgname=termux
 _pkg="com.${_pkgname}"
 _Pkg="Termux"
@@ -104,10 +108,16 @@ pkgbase="${_pkgname}-bin"
 pkgname=(
   "${pkgbase}"
 )
+if [[ "${_docs}" == "true" ]]; then
+  pkgname+=(
+    "${pkgname}-docs"
+  )
+fi
 pkgver=0.118.1
 # For building source on-device
 _commit="e117ccae32d5a7d75479b61f034000122fe9fa24"
 _cmd_commit="871a50c11278990214d684d39ac592f0401a5df9"
+_cmd_man_commit="7ffa116f99599f027e1a371e92ded76b6b7462a9"
 pkgrel=3
 _fdroid_pkgrel=1000
 if [[ "${_fdroid}" == "true" ]]; then
@@ -152,7 +162,13 @@ optdepends=(
   )
 makedepends=(
   'coreutils'
+  "make"
 )
+if [[ "${_docs}" == "true" ]]; then
+  makedepends+=(
+    "${_py}-docutils"
+  )
+fi
 checkdepends=(
 )
 provides=(
@@ -202,14 +218,23 @@ fi
 if [[ ! -v "_cmd_tag" ]]; then
   _cmd_tag="${_cmd_commit}"
 fi
+if [[ ! -v "_cmd_man_tag_name" ]]; then
+  _cmd_man_tag_name="commit"
+fi
+if [[ ! -v "_cmd_man_tag" ]]; then
+  _cmd_man_tag="${_cmd_man_commit}"
+fi
 _cmd_tarname="${_pkgname}-cmd-${_cmd_tag}"
 _cmd_tarfile="${_cmd_tarname}.${_archive_format}"
+_cmd_man_tarname="${_pkgname}-cmd-man-${_cmd_man_tag}"
+_cmd_man_tarfile="${_cmd_man_tarname}.${_archive_format}"
 if [[ "${_offline}" == "true" ]]; then
   _url="file://${HOME}/${pkgname}"
 fi
 source=()
 sha256sums=()
 _cmd_github_sum="a3568c1fdd79cfaae6aa63ed117683fbbfdc0df59d7dd55a98b9bd3f2ab4d989"
+_cmd_man_github_sum="e04d018b68bd5f5f7598d17d9eaf8a318986c89031f439abe7ea4ba5ef6d9f15"
 if [[ "${_git}" == true ]]; then
   makedepends+=(
     "git"
@@ -287,12 +312,50 @@ if [[ "${_cmd}" == "true" ]]; then
     "${_cmd_sum}"
   )
 fi
+if [[ "${_docs}" == "true" ]]; then
+  if [[ "${_evmfs}" == "true" ]]; then
+    if [[ "${_git}" == "false" ]]; then
+      _src="${_evmfs_cmd_man_src}"
+      source+=(
+        "${_cmd_man_sig_src}"
+      )
+      sha256sums+=(
+        "${_cmd_man_sig_sum}"
+      )
+    fi
+  elif [[ "${_evmfs}" == "false" ]]; then
+    if [[ "${_git}" == true ]]; then
+      _cmd_man_src="${_cmd_man_tarname}::git+${_cmd_man_url}#${_cmd_man_tag_name}=${_cmd_man_tag}"
+      _cmd_man_sum="SKIP"
+    elif [[ "${_git}" == false ]]; then
+      if [[ "${_git_service}" == "github" ]]; then
+        if [[ "${_cmd_tag_name}" == "commit" ]]; then
+          _cmd_man_uri="${_cmd_url}-man/archive/${_cmd_man_tag}.${_archive_format}"
+          _cmd_man_sum="${_cmd_man_github_sum}"
+        fi
+      elif [[ "${_git_service}" == "gitlab" ]]; then
+        if [[ "${_cmd_tag_name}" == "commit" ]]; then
+          _cmd_uri="${_cmd_url}-man/-/archive/${_cmd_man_tag}/${_cmd_man_tag}.${_archive_format}"
+        fi
+      fi
+      _cmd_man_src="${_cmd_man_tarfile}::${_cmd_man_uri}"
+    fi
+  fi
+  source+=(
+    "${_cmd_man_src}"
+  )
+  sha256sums+=(
+    "${_cmd_man_sum}"
+  )
+fi
+
 source+=(
   "${_src}"
 )
 sha256sums+=(
   "${_sum}"
 )
+
 noextract=(
   "${_src}"
 )
@@ -301,7 +364,7 @@ validgpgkeys=(
   "37D2C98789D8311948394E3E41E7044E1DBA2E89"
 )
 
-package() {
+package_termux-bin() {
   local \
     _dest_dir \
     _dest \
@@ -334,6 +397,24 @@ package() {
     )
     cd \
       "${_pkgname}-${_cmd_tag}"
+    make \
+      "${_make_opts[@]}" \
+      install-scripts
+  install \
+    -vDm644 \
+    "COPYING" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+  fi
+}
+
+package_termux-docs() {
+  if [[ "${_cmd}" == "true" ]]; then
+    _make_opts+=(
+      DESTDIR="${pkgdir}"
+      PREFIX="/usr"
+    )
+    cd \
+      "${_pkgname}-man-${_cmd_man_tag}"
     make \
       "${_make_opts[@]}" \
       install
