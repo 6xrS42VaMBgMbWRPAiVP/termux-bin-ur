@@ -38,6 +38,18 @@ _os="$(
 _arch="$(
   uname \
     -m)"
+_evmfs_available="$(
+  command \
+    -v \
+    "evmfs" || \
+    true)"
+if [[ ! -v "_evmfs" ]]; then
+  if [[ "${_evmfs_available}" != "" ]]; then
+    _evmfs="true"
+  elif [[ "${_evmfs_available}" == "" ]]; then
+    _evmfs="false"
+  fi
+fi
 if [[ ! -v "_fdroid" ]]; then
   _fdroid="false"
 fi
