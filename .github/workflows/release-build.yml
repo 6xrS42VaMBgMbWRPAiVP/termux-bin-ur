@@ -1235,7 +1235,7 @@ jobs:
           asset_path:
             "termux-docs-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
           asset_name:
-            "dogeos-android-termux-docs-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "dogeos-android-termux-docs-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_content_type:
             application/gzip
   arch_release:

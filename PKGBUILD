@@ -101,6 +101,9 @@ if [[ ! -v "_archive_format" ]]; then
 fi
 if [[ ! -v "_docs" ]]; then
   _docs="true"
+  if [[ "${_arch}" == "armv8l" ]]; then
+    _docs="false"
+  fi
 fi
 _py="python"
 _pkgname=termux
