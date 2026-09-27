@@ -120,7 +120,7 @@ pkgver=0.118.1
 _commit="e117ccae32d5a7d75479b61f034000122fe9fa24"
 _cmd_commit="871a50c11278990214d684d39ac592f0401a5df9"
 _cmd_man_commit="7ffa116f99599f027e1a371e92ded76b6b7462a9"
-pkgrel=17
+pkgrel=18
 _fdroid_pkgrel=1000
 if [[ "${_fdroid}" == "true" ]]; then
   pkgrel="${_fdroid_pkgrel}"
@@ -261,6 +261,7 @@ elif [[ "${_git}" == false ]]; then
       _sum="f137958392a800fca583bfc00f191b8edb29b77c705fddf27dffb6c26ca5d413"
     fi
   elif [[ "${_github}" == "true" ]]; then
+    _sum="SKIP"
     _url="${_github_url}"
     if [[ "${_tag_name}" == "pkgver" ]]; then
       _dl_name="${_pkgname}-app_v${pkgver}+github-debug_${_aarch}.apk"
@@ -284,6 +285,7 @@ if [[ "${_cmd}" == "true" ]]; then
   if [[ "${_evmfs}" == "true" ]]; then
     if [[ "${_git}" == "false" ]]; then
       _src="${_evmfs_cmd_src}"
+      _cmd_sum="SKIP"
       source+=(
         "${_cmd_sig_src}"
       )
