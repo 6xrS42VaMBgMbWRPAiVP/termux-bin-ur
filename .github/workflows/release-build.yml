@@ -1160,9 +1160,26 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "android-display-utils-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "termux-bin-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
           asset_name:
-            "dogeos-android-android-display-utils-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "dogeos-android-termux-bin-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+          asset_content_type:
+            application/gzip
+      - name:
+          Upload the Android package (termux-docs).
+        uses:
+          actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN:
+            ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url:
+            ${{ github.event.release.upload_url }}
+            # ${{ steps.create_release.outputs.upload_url }}
+          asset_path:
+            "termux-docs-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+          asset_name:
+            "dogeos-android-termux-docs-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
           asset_content_type:
             application/gzip
   arch_release:
@@ -1969,9 +1986,26 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "android-display-utils-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "termux-bin-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
           asset_name:
-            "dogeos-gnu-android-display-utils-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "dogeos-gnu-termux-bin-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+          asset_content_type:
+            application/gzip
+      - name:
+          Uploads GNU package (termux-docs).
+        uses:
+          actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN:
+            ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url:
+            ${{ github.event.release.upload_url }}
+            # ${{ steps.create_release.outputs.upload_url }}
+          asset_path:
+            "termux-docs-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+          asset_name:
+            "dogeos-gnu-termux-docs-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
           asset_content_type:
             application/gzip
   msys2_release:
@@ -2498,7 +2532,7 @@ jobs:
         id:
           version
       - name:
-          Upload Windows package (termux-shortcuts-utils).
+          Upload Windows package (termux-bin).
         uses:
           actions/upload-release-asset@v1
         env:
@@ -2509,11 +2543,29 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "android-display-utils-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "termux-bin-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
           asset_name:
-            "dogeos-windows-android-display-utils-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "dogeos-windows-termux-bin-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
           asset_content_type:
             application/gzip
+      - name:
+          Upload Windows package (termux-docs).
+        uses:
+          actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN:
+            ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url:
+            ${{ github.event.release.upload_url }}
+            # ${{ steps.create_release.outputs.upload_url }}
+          asset_path:
+            "termux-docs-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+          asset_name:
+            "dogeos-windows-termux-docs-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+          asset_content_type:
+            application/gzip
+
 
   # This is the ideal way termux-docker would work with GHA.
   broken-ideal:
