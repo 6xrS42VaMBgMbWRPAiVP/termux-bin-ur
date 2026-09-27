@@ -108,8 +108,8 @@ pkgver=0.118.1
 # For building source on-device
 _commit="e117ccae32d5a7d75479b61f034000122fe9fa24"
 _cmd_commit="871a50c11278990214d684d39ac592f0401a5df9"
+pkgrel=3
 _fdroid_pkgrel=1000
-pkgrel=2
 if [[ "${_fdroid}" == "true" ]]; then
   pkgrel="${_fdroid_pkgrel}"
 fi
@@ -333,7 +333,7 @@ package() {
       PREFIX="/usr"
     )
     cd \
-      "${_cmd_tarname}"
+      "${_pkgname}-${_cmd_tag}"
     make \
       "${_make_opts[@]}" \
       install
