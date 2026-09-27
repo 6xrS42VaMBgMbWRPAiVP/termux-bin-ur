@@ -1191,7 +1191,7 @@ jobs:
           aarch
         run: |
           _arch="$( \
-            _uname \
+            uname \
               -m)"; \
           if [[ "${_arch}" == "armv8l" ]]; then \
             _aarch="arm"; \
