@@ -73,6 +73,9 @@ fi
 if [[ ! -v "_git" ]]; then
   _git="false"
 fi
+if [[ ! -v "_git_service" ]]; then
+  _git_service="github"
+fi
 if [[ ! -v "_cmd" ]]; then
   _cmd="true"
   if [[ "${_evmfs}" == "true" ]]; then
@@ -106,7 +109,7 @@ pkgver=0.118.1
 _commit="e117ccae32d5a7d75479b61f034000122fe9fa24"
 _cmd_commit="871a50c11278990214d684d39ac592f0401a5df9"
 _fdroid_pkgrel=1000
-pkgrel=1
+pkgrel=2
 if [[ "${_fdroid}" == "true" ]]; then
   pkgrel="${_fdroid_pkgrel}"
 fi
