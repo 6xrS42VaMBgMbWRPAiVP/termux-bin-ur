@@ -1166,11 +1166,13 @@ jobs:
             "::set-output name=version::$( \
               /entrypoint.sh \
                 _evmfs="false" \
+                _git="false" \
                 recipe-get \
                   "PKGBUILD" \
                   "pkgver")-$( \
               /entrypoint.sh \
                 _evmfs="false" \
+                _git="false" \
                 recipe-get \
                   "PKGBUILD" \
                   "pkgrel")"
