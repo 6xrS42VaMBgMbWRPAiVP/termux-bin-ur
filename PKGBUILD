@@ -195,6 +195,7 @@ _ns="${_pkgname}"
 _cmd_ns="themartiancompany"
 _github_url="${_http}/${_ns}/${_pkgname}-app"
 _cmd_url="${_http}/${_cmd_ns}/${_pkgname}"
+_cmd_man_url="${_http}/${_cmd_ns}/${_pkgname}-man"
 if [[ ! -v "_tag_name" ]]; then
   if [[ "${_fdroid}" == "true" ]]; then
     _tag_name="pkgrel"
@@ -236,6 +237,7 @@ sha256sums=()
 _cmd_github_sum="a3568c1fdd79cfaae6aa63ed117683fbbfdc0df59d7dd55a98b9bd3f2ab4d989"
 _cmd_man_github_sum="e04d018b68bd5f5f7598d17d9eaf8a318986c89031f439abe7ea4ba5ef6d9f15"
 if [[ "${_git}" == true ]]; then
+  _url="${_github_url}"
   makedepends+=(
     "git"
   )

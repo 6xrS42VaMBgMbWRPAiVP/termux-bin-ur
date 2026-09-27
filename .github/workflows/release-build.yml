@@ -2548,12 +2548,14 @@ jobs:
           echo \
             "::set-output name=version::$( \
             export \
-              _evmfs="false" && \
+              _evmfs="false" \
+             _git="false" && \
             recipe-get \
               "PKGBUILD" \
               "pkgver")-$( \
             export \
-              _evmfs="false" && \
+              _evmfs="false" \
+             _git="false" && \
             recipe-get \
               "PKGBUILD" \
               "pkgrel")"
