@@ -2584,7 +2584,7 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "termux-bin-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "termux-bin-${{ steps.version.outputs.version }}-${{ matrix.arch }}.pkg.tar.xz"
           asset_name:
             "dogeos-windows-termux-bin-${{ steps.version.outputs.version }}-${{ matrix.arch }}.pkg.tar.xz"
           asset_content_type:
