@@ -1188,6 +1188,23 @@ jobs:
         id:
           version
       - name:
+          aarch
+        run: |
+          _arch="$( \
+            _uname \
+              -m)"; \
+          if [[ "${_arch}" == "armv8l" ]]; then \
+            _aarch="arm"; \
+          elif [[ "${_arch}" == "x86" ]]; then \
+            _aarch="i686"; \
+          else \
+            _aarch="${_arch}"; \
+          fi; \
+          echo \
+            "::set-output name=aarch::${_aarch}"
+        id:
+          aarch
+      - name:
           Upload the Android package.
         uses:
           actions/upload-release-asset@v1
@@ -1199,7 +1216,7 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "termux-bin-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
+            "termux-bin-${{ steps.version.outputs.version }}-${{ steps.version.outputs.aarch }}.pkg.tar.xz"
           asset_name:
             "dogeos-android-termux-bin-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_content_type:
