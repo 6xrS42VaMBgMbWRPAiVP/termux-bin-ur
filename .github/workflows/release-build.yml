@@ -1127,8 +1127,8 @@ jobs:
             "${PWD}" \
             -iname \
               "*pkg.tar*"
-          # bash \
-          #   ".github/android-arm32-fix"
+          bash \
+            ".github/android-arm32-fix"
       # - name:
       #     Installs the package.
       #   run: |
@@ -1216,7 +1216,7 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "termux-bin-${{ steps.version.outputs.version }}-${{ steps.version.outputs.aarch }}.pkg.tar.xz"
+            "termux-bin-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_name:
             "dogeos-android-termux-bin-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_content_type:
