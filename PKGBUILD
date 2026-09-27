@@ -120,7 +120,7 @@ pkgver=0.118.1
 _commit="e117ccae32d5a7d75479b61f034000122fe9fa24"
 _cmd_commit="871a50c11278990214d684d39ac592f0401a5df9"
 _cmd_man_commit="7ffa116f99599f027e1a371e92ded76b6b7462a9"
-pkgrel=18
+pkgrel=19
 _fdroid_pkgrel=1000
 if [[ "${_fdroid}" == "true" ]]; then
   pkgrel="${_fdroid_pkgrel}"
@@ -133,13 +133,17 @@ _pkgdesc=(
 pkgdesc="${_pkgdesc[*]}"
 arch=(
   'arm'
+  "armv7l"
+  "armv8l"
   'aarch64'
   'i686'
   "pentium4"
   'x86_64'
 )
 _aarch="${_arch}"
-if [[ "${_arch}" == "armv7l" ]]; then
+if [[ "${_arch}" == "armv7l" || \
+      "${_arch}" == "armv8l" || \
+      "${_arch}" == "arm" ]]; then
   _aarch="armeabi-v7a"
 elif [[ "${_arch}" == "aarch64" ]]; then
   _aarch="arm64-v8a"
