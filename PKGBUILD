@@ -1,44 +1,98 @@
 # SPDX-License-Identifier: AGPL-3.0
 
-#    ----------------------------------------------------------------------
-#    Copyright © 2024, 2025  Pellegrino Prevete
+#    -----------------------------------------------------
+#    Copyright © 2024, 2025, 2026  Pellegrino Prevete
 #
 #    All rights reserved
-#    ----------------------------------------------------------------------
+#    -----------------------------------------------------
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    This program is free software: you can redistribute
+#    it and/or modify it under the terms of the
+#    GNU Affero General Public License as published by
+#    the Free Software Foundation, either version 3 of
+#    the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    This program is distributed in the hope that it
+#    will be useful, but WITHOUT ANY WARRANTY;
+#    without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#    See the GNU Affero General Public License for
+#    more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#    You should have received a copy of the
+#    GNU Affero General Public License
+#    along with this program.
+#    If not, see <https://www.gnu.org/licenses/>.
 
-# Maintainer: Truocolo <truocolo@aol.com>
-# Maintainer: Pellegrino Prevete (tallero) <pellegrinoprevete@gmail.com>
+# Maintainers:
+#   Truocolo
+#     <truocolo@aol.com>
+#     <truocolo@0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b>
+#   Pellegrino Prevete (dvorak)
+#     <pellegrinoprevete@gmail.com>
+#     <dvorak@0x87003Bd6C074C713783df04f36517451fF34CBEf>
 
-_fdroid="false"
-_github="true"
-_system_install="false"
-_user_install="true"
+_os="$(
+  uname \
+  -o)"
+_arch="$(
+  uname \
+    -m)"
+if [[ ! -v "_fdroid" ]]; then
+  _fdroid="false"
+fi
+if [[ ! -v "_github" ]]; then
+  _github="true"
+fi
+if [[ ! -v "_system_install" ]]; then
+  _system_install="false"
+fi
+if [[ ! -v "_user_install" ]]; then
+  _user_install="false"
+fi
 if [[ "${_system_install}" == "true" ]]; then
   _install_type="system"
 elif [[ "${_user_install}" == "true" ]]; then
   _install_type="user"
 fi
-_offline="false"
-_git="false"
-_pkgname="termux"
+if [[ ! -v "_offline" ]]; then
+  _offline="false"
+fi
+if [[ ! -v "_git" ]]; then
+  _git="false"
+fi
+if [[ ! -v "_cmd" ]]; then
+  _cmd="true"
+  if [[ "${_evmfs}" == "true" ]]; then
+    _cmd="false"
+  fi
+fi
+if [[ ! -v "_archive_format" ]]; then
+  if [[ "${_git}" == "true" ]]; then
+    if [[ "${_evmfs}" == "true" ]]; then
+      _archive_format="bundle"
+    elif [[ "${_evmfs}" == "false" ]]; then
+      _archive_format="git"
+    fi
+  elif [[ "${_git}" == "false" ]]; then
+    if [[ "${_git_service}" == "github" ]]; then
+      _archive_format="zip"
+    elif [[ "${_git_service}" == "gitlab" ]]; then
+      _archive_format="tar.gz"
+    fi
+  fi
+fi
+_pkgname=termux
 _pkg="com.${_pkgname}"
 _Pkg="Termux"
-pkgname="${_pkgname}-bin"
+pkgbase="${_pkgname}-bin"
+pkgname=(
+  "${pkgbase}"
+)
 pkgver=0.118.1
-# _commit="e117ccae32d5a7d75479b61f034000122fe9fa24"
+# For building source on-device
+_commit="e117ccae32d5a7d75479b61f034000122fe9fa24"
+_cmd_commit="871a50c11278990214d684d39ac592f0401a5df9"
 _fdroid_pkgrel=1000
 pkgrel=1
 if [[ "${_fdroid}" == "true" ]]; then
@@ -53,12 +107,10 @@ pkgdesc="${_pkgdesc[*]}"
 arch=(
   'arm'
   'aarch64'
-  'x86_64'
   'i686'
+  "pentium4"
+  'x86_64'
 )
-_arch="$( \
-  uname \
-    -m)"
 _aarch="${_arch}"
 if [[ "${_arch}" == "armv7l" ]]; then
   _aarch="armeabi-v7a"
@@ -71,14 +123,12 @@ license=(
 )
 depends=(
 )
-_os="$( \
-  uname \
-    -o)"
-[[ "${_os}" != "GNU/Linux" ]] && \
-[[ "${_os}" == "Android" ]] && \
+if [[ "${_os}" != "GNU/Linux" ]] && \
+   [[ "${_os}" == "Android" ]]; then
   depends+=(
     'inteppacman'
   )
+fi
 optdepends=(
 )
 [[ "${_os}" != "GNU/Linux" ]] && \
@@ -96,21 +146,55 @@ provides=(
 conflicts=(
   "${_pkgname}"
 )
+if [[ "${_cmd}" == "true" ]]; then
+  provides+=(
+    "termux-cmd=${pkgver}"
+    "termux-cli=${pkgver}"
+  )
+  conflicts+=(
+    "termux-cmd"
+    "termux-cli"
+  )
+fi
 source=()
 sha256sums=()
 _fdroid_url="https://f-droid.org/repo"
 _http="https://github.com"
 _ns="${_pkgname}"
+_cmd_ns="themartiancompany"
 _github_url="${_http}/${_ns}/${_pkgname}-app"
-# _tag="${pkgrel}"
-_tag="${pkgver}"
-# _tag_name="pkgrel"
-_tag_name="pkgver"
+_cmd_url="${_http}/${_cmd_ns}/${_pkgname}"
+if [[ ! -v "_tag_name" ]]; then
+  if [[ "${_fdroid}" == "true" ]]; then
+    _tag_name="pkgrel"
+  fi
+  if [[ "${_github}" == "true" ]]; then
+    _tag_name="pkgver"
+  fi
+fi
+if [[ ! -v "_tag" ]]; then
+  if [[ "${_fdroid}" == "true" ]]; then
+    _tag="${pkgrel}"
+  fi
+  if [[ "${_github}" == "true" ]]; then
+    _tag="{pkgver}"
+  fi
+fi
 _tarname="${_pkgname}-${pkgver}-${pkgrel}"
-[[ "${_offline}" == "true" ]] && \
+if [[ ! -v "_cmd_tag_name" ]]; then
+  _cmd_tag_name="commit"
+fi
+if [[ ! -v "_cmd_tag" ]]; then
+  _cmd_tag="${_cmd_commit}"
+fi
+_cmd_tarname="${_pkgname}-cmd-${_cmd_tag}"
+_cmd_tarfile="${_cmd_tarname}.${_archive_format}"
+if [[ "${_offline}" == "true" ]]; then
   _url="file://${HOME}/${pkgname}"
+fi
 source=()
 sha256sums=()
+_cmd_github_sum="a3568c1fdd79cfaae6aa63ed117683fbbfdc0df59d7dd55a98b9bd3f2ab4d989"
 if [[ "${_git}" == true ]]; then
   makedepends+=(
     "git"
@@ -151,6 +235,43 @@ elif [[ "${_git}" == false ]]; then
     fi
   fi
 fi
+if [[ "${_cmd}" == "true" ]]; then
+  if [[ "${_evmfs}" == "true" ]]; then
+    if [[ "${_git}" == "false" ]]; then
+      _src="${_evmfs_cmd_src}"
+      source+=(
+        "${_cmd_sig_src}"
+      )
+      sha256sums+=(
+        "${_cmd_sig_sum}"
+      )
+    fi
+  elif [[ "${_evmfs}" == "false" ]]; then
+    if [[ "${_git}" == true ]]; then
+      _cmd_src="${_cmd_tarname}::git+${_cmd_url}#${_cmd_tag_name}=${_cmd_tag}?signed"
+      _cmd_sum="SKIP"
+    elif [[ "${_git}" == false ]]; then
+      _uri=""
+      if [[ "${_git_service}" == "github" ]]; then
+        if [[ "${_cmd_tag_name}" == "commit" ]]; then
+          _cmd_uri="${_cmd_url}/archive/${_cmd_tag}.${_archive_format}"
+          _cmd_sum="${_cmd_github_sum}"
+        fi
+      elif [[ "${_git_service}" == "gitlab" ]]; then
+        if [[ "${_cmd_tag_name}" == "commit" ]]; then
+          _cmd_uri="${_cmd_url}/-/archive/${_cmd_tag}/${_cmd_tag}.${_archive_format}"
+        fi
+      fi
+      _cmd_src="${_cmd_tarfile}::${_cmd_uri}"
+    fi
+  fi
+  source+=(
+    "${_cmd_src}"
+  )
+  sha256sums+=(
+    "${_cmd_sum}"
+  )
+fi
 source+=(
   "${_src}"
 )
@@ -184,12 +305,17 @@ package() {
     _dest="base.apk"
   fi
   install \
-    -dm755 \
+    -vdm755 \
     "${pkgdir}${_dest_dir}"
   install \
-    -Dm644 \
+    -vDm644 \
     "${srcdir}/${_tarname}.apk" \
     "${pkgdir}${_dest_dir}/${_dest}"
+  if [[ "${_cmd}" == "true" ]]; then
+    install \
+      -v \
+      "${srcdir}/${_pkgname}"
+  fi
 }
 
 # vim: ft=sh syn=sh et
