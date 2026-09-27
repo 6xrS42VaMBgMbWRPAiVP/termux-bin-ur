@@ -1158,14 +1158,30 @@ jobs:
           echo \
             "::set-output name=version::$( \
               /entrypoint.sh \
+                TERMUX_VERSION=50 \
+                arch="${_arch}" \
                 _evmfs="false" \
                 _git="false" \
+                _git_service="github" \
+                recipe-get \
+                  -v \
+                  "PKGBUILD" \
+                  "pkgver"
+              /entrypoint.sh \
+                TERMUX_VERSION=50 \
+                arch="${_arch}" \
+                _evmfs="false" \
+                _git="false" \
+                _git_service="github" \
                 recipe-get \
                   "PKGBUILD" \
                   "pkgver")-$( \
               /entrypoint.sh \
+                TERMUX_VERSION=50 \
+                arch="${_arch}" \
                 _evmfs="false" \
                 _git="false" \
+                _git_service="github" \
                 recipe-get \
                   "PKGBUILD" \
                   "pkgrel")"
