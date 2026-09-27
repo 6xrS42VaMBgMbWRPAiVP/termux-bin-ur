@@ -291,6 +291,7 @@ package() {
     _dest_dir \
     _dest \
     _extra_libs=() \
+    _make_opts=() \
     _manifest \
     _manifests=() \
     _lib
@@ -312,9 +313,19 @@ package() {
     "${srcdir}/${_tarname}.apk" \
     "${pkgdir}${_dest_dir}/${_dest}"
   if [[ "${_cmd}" == "true" ]]; then
-    install \
-      -v \
-      "${srcdir}/${_pkgname}"
+    _make_opts+=(
+      DESTDIR="${pkgdir}"
+      PREFIX="/usr"
+    )
+    cd \
+      "${_cmd_tarname}"
+    make \
+      "${_make_opts[@]}" \
+      install
+  install \
+    -vDm644 \
+    "COPYING" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
   fi
 }
 
